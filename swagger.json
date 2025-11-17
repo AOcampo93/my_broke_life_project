@@ -1,0 +1,434 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "MyBrokeLife API",
+    "description": "API for personal finance tracking including authentication, categories, transactions, budgets and reports.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "tags": [
+    { "name": "Auth", "description": "Authentication routes" },
+    { "name": "Categories", "description": "Manage categories" },
+    { "name": "Transactions", "description": "Manage transactions" },
+    { "name": "Budgets", "description": "Manage budgets" },
+    { "name": "Reports", "description": "View reports" }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Use 'Bearer <token>' for JWT authentication"
+    }
+  },
+  "security": [
+    { "BearerAuth": [] }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserRegister" }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Created" },
+          "400": { "description": "Bad Request" },
+          "409": { "description": "Conflict" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login with email and password",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserLogin" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "400": { "description": "Bad Request" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/auth/google": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Authenticate via Google OAuth",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/GoogleAuth" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "400": { "description": "Bad Request" },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Logout a user",
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "Get all categories for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "A list of categories",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Category" }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Categories"],
+        "summary": "Create a new category",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/CategoryInput" }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Created" },
+          "400": { "description": "Bad Request" }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "Get a single category by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "schema": { "$ref": "#/definitions/Category" } },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "put": {
+        "tags": ["Categories"],
+        "summary": "Update a category",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CategoryInput" } }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "400": { "description": "Bad Request" },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "delete": {
+        "tags": ["Categories"],
+        "summary": "Delete a category",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get all transactions for the authenticated user",
+        "parameters": [
+          { "name": "from", "in": "query", "type": "string", "format": "date" },
+          { "name": "to", "in": "query", "type": "string", "format": "date" },
+          { "name": "type", "in": "query", "type": "string", "enum": ["expense", "income"] },
+          { "name": "category", "in": "query", "type": "string" }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of transactions",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Transaction" }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Create a new transaction",
+        "parameters": [
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/TransactionInput" } }
+        ],
+        "responses": {
+          "201": { "description": "Created" },
+          "400": { "description": "Bad Request" }
+        }
+      }
+    },
+    "/transactions/{id}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get a transaction by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "schema": { "$ref": "#/definitions/Transaction" } },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "put": {
+        "tags": ["Transactions"],
+        "summary": "Update a transaction",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/TransactionInput" } }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "400": { "description": "Bad Request" },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "delete": {
+        "tags": ["Transactions"],
+        "summary": "Delete a transaction",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    },
+    "/budgets": {
+      "get": {
+        "tags": ["Budgets"],
+        "summary": "Get all budgets for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "A list of budgets",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Budget" }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Budgets"],
+        "summary": "Create or update a budget",
+        "parameters": [
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/BudgetInput" } }
+        ],
+        "responses": {
+          "201": { "description": "Created" },
+          "400": { "description": "Bad Request" }
+        }
+      }
+    },
+    "/budgets/{id}": {
+      "get": {
+        "tags": ["Budgets"],
+        "summary": "Get a budget by ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "OK", "schema": { "$ref": "#/definitions/Budget" } },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "put": {
+        "tags": ["Budgets"],
+        "summary": "Update a budget",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/BudgetInput" } }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "400": { "description": "Bad Request" },
+          "404": { "description": "Not Found" }
+        }
+      },
+      "delete": {
+        "tags": ["Budgets"],
+        "summary": "Delete a budget",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    },
+    "/reports/monthly": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Get a monthly summary of income and expenses",
+        "parameters": [
+          { "name": "month", "in": "query", "type": "string", "description": "Month in YYYY-MM format" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Monthly summary",
+            "schema": { "$ref": "#/definitions/MonthlyReport" }
+          },
+          "400": { "description": "Bad Request" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserRegister": {
+      "type": "object",
+      "required": ["email", "password", "name"],
+      "properties": {
+        "email": { "type": "string" },
+        "password": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "UserLogin": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": { "type": "string" },
+        "password": { "type": "string" }
+      }
+    },
+    "GoogleAuth": {
+      "type": "object",
+      "required": ["idToken"],
+      "properties": {
+        "idToken": { "type": "string" }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "_id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "color": { "type": "string" },
+        "icon": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "CategoryInput": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "color": { "type": "string" },
+        "icon": { "type": "string" }
+      }
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "_id": { "type": "string" },
+        "userId": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "date": { "type": "string" },
+        "note": { "type": "string" },
+        "account": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "TransactionInput": {
+      "type": "object",
+      "required": ["categoryId", "amount", "type", "date"],
+      "properties": {
+        "categoryId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["expense", "income"] },
+        "date": { "type": "string" },
+        "note": { "type": "string" },
+        "account": { "type": "string" }
+      }
+    },
+    "Budget": {
+      "type": "object",
+      "properties": {
+        "_id": { "type": "string" },
+        "userId": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "month": { "type": "string" },
+        "limit": { "type": "number" },
+        "spent": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "BudgetInput": {
+      "type": "object",
+      "required": ["categoryId", "month", "limit"],
+      "properties": {
+        "categoryId": { "type": "string" },
+        "month": { "type": "string" },
+        "limit": { "type": "number" }
+      }
+    },
+    "MonthlyReport": {
+      "type": "object",
+      "properties": {
+        "month": { "type": "string" },
+        "total_income": { "type": "number" },
+        "total_expenses": { "type": "number" },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": { "type": "string" },
+              "type": { "type": "string" },
+              "total": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
