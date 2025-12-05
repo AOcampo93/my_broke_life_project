@@ -228,7 +228,7 @@
     },
     "/budgets": {
       "get": {
-        "tags": ["Budgets", "Untested"],
+        "tags": ["Budgets"],
         "summary": "Get all budgets for the authenticated user",
         "responses": {
           "200": {
@@ -241,7 +241,7 @@
         }
       },
       "post": {
-        "tags": ["Budgets", "Untested"],
+        "tags": ["Budgets"],
         "summary": "Create or update a budget",
         "parameters": [
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/BudgetInput" } }
@@ -254,7 +254,7 @@
     },
     "/budgets/{id}": {
       "get": {
-        "tags": ["Budgets", "Untested"],
+        "tags": ["Budgets"],
         "summary": "Get a budget by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -265,7 +265,7 @@
         }
       },
       "put": {
-        "tags": ["Budgets", "Untested"],
+        "tags": ["Budgets"],
         "summary": "Update a budget",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
@@ -278,7 +278,7 @@
         }
       },
       "delete": {
-        "tags": ["Budgets", "Untested"],
+        "tags": ["Budgets"],
         "summary": "Delete a budget",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
