@@ -29,20 +29,28 @@
     { "BearerAuth": [] }
   ],
   "paths": {
-    "/auth/google/url": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Get the Google OAuth consent URL",
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth", "Untested"],
+        "summary": "Register a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserRegister" }
+          }
+        ],
         "responses": {
           "200": { "description": "OK" },
           "500": { "description": "Internal Server Error" }
         }
       }
     },
-    "/auth/google/callback": {
-      "get": {
-        "tags": ["Auth"],
-        "summary": "Handle the OAuth callback from Google",
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth", "Untested"],
+        "summary": "Login with email and password",
         "parameters": [
           { "name": "code", "in": "query", "required": true, "type": "string" }
         ],
@@ -55,7 +63,7 @@
     },
     "/auth/google": {
       "post": {
-        "tags": ["Auth"],
+        "tags": ["Auth", "Untested"],
         "summary": "Authenticate via Google OAuth",
         "parameters": [
           {
@@ -74,7 +82,7 @@
     },
     "/auth/logout": {
       "post": {
-        "tags": ["Auth"],
+        "tags": ["Auth", "Untested"],
         "summary": "Logout a user",
         "responses": {
           "200": { "description": "OK" }
@@ -83,7 +91,7 @@
     },
     "/categories": {
       "get": {
-        "tags": ["Categories"],
+        "tags": ["Categories", "Untested"],
         "summary": "Get all categories for the authenticated user",
         "responses": {
           "200": {
@@ -96,7 +104,7 @@
         }
       },
       "post": {
-        "tags": ["Categories"],
+        "tags": ["Categories", "Untested"],
         "summary": "Create a new category",
         "parameters": [
           {
@@ -114,7 +122,7 @@
     },
     "/categories/{id}": {
       "get": {
-        "tags": ["Categories"],
+        "tags": ["Categories", "Untested"],
         "summary": "Get a single category by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -125,7 +133,7 @@
         }
       },
       "put": {
-        "tags": ["Categories"],
+        "tags": ["Categories", "Untested"],
         "summary": "Update a category",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
@@ -138,7 +146,7 @@
         }
       },
       "delete": {
-        "tags": ["Categories"],
+        "tags": ["Categories", "Untested"],
         "summary": "Delete a category",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -151,7 +159,7 @@
     },
     "/transactions": {
       "get": {
-        "tags": ["Transactions"],
+        "tags": ["Transactions", "Untested"],
         "summary": "Get all transactions for the authenticated user",
         "parameters": [
           { "name": "from", "in": "query", "type": "string", "format": "date" },
@@ -170,7 +178,7 @@
         }
       },
       "post": {
-        "tags": ["Transactions"],
+        "tags": ["Transactions", "Untested"],
         "summary": "Create a new transaction",
         "parameters": [
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/TransactionInput" } }
@@ -183,7 +191,7 @@
     },
     "/transactions/{id}": {
       "get": {
-        "tags": ["Transactions"],
+        "tags": ["Transactions", "Untested"],
         "summary": "Get a transaction by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -194,7 +202,7 @@
         }
       },
       "put": {
-        "tags": ["Transactions"],
+        "tags": ["Transactions", "Untested"],
         "summary": "Update a transaction",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
@@ -207,7 +215,7 @@
         }
       },
       "delete": {
-        "tags": ["Transactions"],
+        "tags": ["Transactions", "Untested"],
         "summary": "Delete a transaction",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -220,7 +228,7 @@
     },
     "/budgets": {
       "get": {
-        "tags": ["Budgets"],
+        "tags": ["Budgets", "Untested"],
         "summary": "Get all budgets for the authenticated user",
         "responses": {
           "200": {
@@ -233,7 +241,7 @@
         }
       },
       "post": {
-        "tags": ["Budgets"],
+        "tags": ["Budgets", "Untested"],
         "summary": "Create or update a budget",
         "parameters": [
           { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/BudgetInput" } }
@@ -246,7 +254,7 @@
     },
     "/budgets/{id}": {
       "get": {
-        "tags": ["Budgets"],
+        "tags": ["Budgets", "Untested"],
         "summary": "Get a budget by ID",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -257,7 +265,7 @@
         }
       },
       "put": {
-        "tags": ["Budgets"],
+        "tags": ["Budgets", "Untested"],
         "summary": "Update a budget",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
@@ -270,7 +278,7 @@
         }
       },
       "delete": {
-        "tags": ["Budgets"],
+        "tags": ["Budgets", "Untested"],
         "summary": "Delete a budget",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" }
@@ -283,7 +291,7 @@
     },
     "/reports/monthly": {
       "get": {
-        "tags": ["Reports"],
+        "tags": ["Reports", "Untested"],
         "summary": "Get a monthly summary of income and expenses",
         "parameters": [
           { "name": "month", "in": "query", "type": "string", "description": "Month in YYYY-MM format" }
