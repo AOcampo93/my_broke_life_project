@@ -1,0 +1,36 @@
+### Get all budgets for current logged in user
+GET http://localhost:3000/api/budgets/
+Authorization: Bearer {{authToken}}
+
+### post new Budget
+POST http://localhost:3000/api/budgets/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{   
+    "userId": "68fa7b718c343811715c781c",
+    "categoryId": "",
+    "month": "",
+    "limit": 1,
+    "spent": 0
+}
+
+
+### Update Budget
+PUT http://localhost:3000/api/budgets/68fbb22f68b908668012bda1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{   
+    "userId": "68fa7b718c343811715c781c",
+    "categoryId": "",
+    "month": "",
+    "limit": 1,
+    "spent": 0
+}
+
+
+### Delete Budget
+DELETE http://localhost:3000/api/budgets/68fd2b04848458d6bec1e3e0
+Authorization: Bearer {{authToken}}
+

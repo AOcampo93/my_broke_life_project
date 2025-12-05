@@ -1,0 +1,40 @@
+####################
+### onRender routes ###
+####################
+
+### Get all budgets for current logged in user
+GET https://<ONRENDERURL>/api/budgets/
+Authorization: Bearer {{authToken}}
+
+### post new Budget
+POST https://<ONRENDERURL>/api/budgets/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{   
+    "userId": "68fa7b718c343811715c781c",
+    "categoryId": "",
+    "month": "",
+    "limit": 1,
+    "spent": 0
+}
+
+
+### Update Budget
+PUT https://<ONRENDERURL>/api/budgets/68fbb22f68b908668012bda1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{   
+    "userId": "68fa7b718c343811715c781c",
+    "categoryId": "",
+    "month": "",
+    "limit": 1,
+    "spent": 0
+}
+
+
+### Delete Budget
+DELETE https://<ONRENDERURL>/api/budgets/68fd2b04848458d6bec1e3e0
+Authorization: Bearer {{authToken}}
+

@@ -1,0 +1,12 @@
+### post new user
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+      "email": "budgetTest@user.com",
+      "password": "apples",
+      "name": "Budget Test",
+      "phone": "1234567890",
+      "role": "admin"
+}
+
