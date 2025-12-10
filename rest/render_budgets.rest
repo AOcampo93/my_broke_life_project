@@ -3,38 +3,46 @@
 ####################
 
 ### Get all budgets for current logged in user
-GET https://<ONRENDERURL>/api/budgets/
+GET http://localhost:3000/api/budgets/
 Authorization: Bearer {{authToken}}
 
 ### post new Budget
-POST https://<ONRENDERURL>/api/budgets/
+# @name postNewBudget
+POST http://localhost:3000/api/budgets/
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {   
     "userId": "68fa7b718c343811715c781c",
-    "categoryId": "",
-    "month": "",
+    "categoryId": "693480e34d28f82c4c645683",
+    "month": "2025-01",
     "limit": 1,
     "spent": 0
 }
 
+### Get Category Id
+@budgetId = {{postNewBudget.response.body._id}}
+
+### Get single budget details
+GET http://localhost:3000/api/budgets/{{budgetId}}
+Authorization: Bearer {{authToken}}
+
 
 ### Update Budget
-PUT https://<ONRENDERURL>/api/budgets/68fbb22f68b908668012bda1
+PUT http://localhost:3000/api/budgets/{{budgetId}}
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {   
     "userId": "68fa7b718c343811715c781c",
-    "categoryId": "",
-    "month": "",
-    "limit": 1,
+    "categoryId": "693480e34d28f82c4c645683",
+    "month": "2026-02",
+    "limit": 2,
     "spent": 0
 }
 
 
 ### Delete Budget
-DELETE https://<ONRENDERURL>/api/budgets/68fd2b04848458d6bec1e3e0
+DELETE http://localhost:3000/api/budgets/{{budgetId}}
 Authorization: Bearer {{authToken}}
 

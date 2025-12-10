@@ -1,0 +1,39 @@
+### Get all categories for current logged in user
+GET http://localhost:3000/api/categories/
+Authorization: Bearer {{authToken}}
+
+### post new category
+# @name postNewCategory
+POST http://localhost:3000/api/categories/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{   
+    "userId": "69347b2d4d28f82c4c6455fa",
+    "name": "groceries",
+    "type": "expense"
+}
+
+### Get Category Id
+@categoryId = {{postNewCategory.response.body._id}}
+
+### Get single category info
+GET http://localhost:3000/api/categories/{{categoryId}}
+Authorization: Bearer {{authToken}}
+
+### Update category
+PUT http://localhost:3000/api/categories/{{categoryId}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{   
+    "userId": "69347b2d4d28f82c4c6455fa",
+    "name": "bills",
+    "type": "expense"
+}
+
+
+### Delete category
+DELETE http://localhost:3000/api/categories/{{categoryId}}
+Authorization: Bearer {{authToken}}
+
