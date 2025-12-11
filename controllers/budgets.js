@@ -28,9 +28,12 @@ async function getAll(req, res, next) {
 async function getSingle(req, res, next) {
   try {
     const { id } = req.params;
-    const budget = await Budget.findOne({ _id: id, userId: req.user._id });
+    const budget = await Budget.findOne({
+      _id: id,
+      userId: req.user._id,
+    }).populate({ path: "categories", populate: { path: "transactions" } });
     if (!budget) {
-      return res.status(404).json({ error: true, message: 'Budget not found' });
+      return res.status(404).json({ error: true, message: "Budget not found" });
     }
     return res.status(200).json(budget);
   } catch (err) {
@@ -48,19 +51,28 @@ async function getSingle(req, res, next) {
  */
 async function createBudget(req, res, next) {
   try {
-    const { categoryId, month, limit } = req.body;
-    if (!categoryId || !month || limit === undefined) {
-      return res.status(400).json({ error: true, message: 'categoryId, month and limit are required' });
+    const { startDate, limit, endDate, name } = req.body;
+    if (!startDate || limit === undefined) {
+      return res
+        .status(400)
+        .json({ error: true, message: "startDate and limit are required" });
     }
-    // Validate category belongs to user
-    const category = await Category.findOne({ _id: categoryId, userId: req.user._id });
-    if (!category) {
-      return res.status(400).json({ error: true, message: 'Invalid category' });
-    }
+
     // Upsert budget (create new or update existing)
-    let budget = await Budget.findOne({ userId: req.user._id, categoryId, month });
+    let budget = await Budget.findOne({
+      userId: req.user._id,
+      startDate,
+      limit,
+      endDate,
+    });
     if (!budget) {
-      budget = new Budget({ userId: req.user._id, categoryId, month, limit });
+      budget = new Budget({
+        userId: req.user._id,
+        startDate,
+        endDate,
+        limit,
+        name,
+      });
     } else {
       budget.limit = limit;
     }
@@ -90,9 +102,14 @@ async function updateBudget(req, res, next) {
     }
     const { categoryId, month, limit } = req.body;
     if (categoryId) {
-      const category = await Category.findOne({ _id: categoryId, userId: req.user._id });
+      const category = await Category.findOne({
+        _id: categoryId,
+        userId: req.user._id,
+      });
       if (!category) {
-        return res.status(400).json({ error: true, message: 'Invalid category' });
+        return res
+          .status(400)
+          .json({ error: true, message: 'Invalid category' });
       }
       budget.categoryId = categoryId;
     }
@@ -116,13 +133,16 @@ async function updateBudget(req, res, next) {
 async function deleteBudget(req, res, next) {
   try {
     const { id } = req.params;
-    const budget = await Budget.findOneAndDelete({ _id: id, userId: req.user._id });
+    const budget = await Budget.findOneAndDelete({
+      _id: id,
+      userId: req.user._id,
+    });
     if (!budget) {
-      return res.status(404).json({ error: true, message: 'Budget not found' });
+      return res.status(404).json({ error: true, message: "Budget not found" });
     }
-    return res.status(200).json({ message: 'Budget deleted successfully' });
+    return res.status(200).json({ message: "Budget deleted successfully" });
   } catch (err) {
-    console.error('budgets.deleteBudget error:', err);
+    console.error("budgets.deleteBudget error:", err);
     return next(err);
   }
 }

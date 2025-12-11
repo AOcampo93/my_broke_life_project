@@ -5,7 +5,7 @@
 // querying easier. The spent field may be updated by the application
 // logic when transactions are created or updated.
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const budgetSchema = new mongoose.Schema(
   {
@@ -14,15 +14,17 @@ const budgetSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: true,
-    },
-    month: {
+    name: {
       type: String,
       required: true,
-      match: /^\d{4}-\d{2}$/, // YYYY-MM format
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: false,
     },
     limit: {
       type: Number,
@@ -35,7 +37,34 @@ const budgetSchema = new mongoose.Schema(
       min: 0,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    virtuals: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
+budgetSchema.virtual("categories", {
+  ref: "Category",
+  localField: "_id",
+  foreignField: "budgetId",
+  justOne: false,
+});
+
+
+// return the total sum of all the categories in the budget. This returns the overall value 'left' in the budget. 
+budgetSchema.virtual('total').get(function(){
+  total = this.spent
+  
+    if (this.categories !== undefined){
+      this.categories.forEach((c) => {
+        total += c.total
+      })
+
+    }
+
+  
+  return total
+})
 module.exports = mongoose.model('Budget', budgetSchema);

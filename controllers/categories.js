@@ -28,7 +28,7 @@ async function getAll(req, res, next) {
 async function getSingle(req, res, next) {
   try {
     const { id } = req.params;
-    const category = await Category.findOne({ _id: id, userId: req.user._id });
+    const category = await Category.findOne({ _id: id, userId: req.user._id }).populate("transactions");
     if (!category) {
       return res.status(404).json({ error: true, message: 'Category not found' });
     }
@@ -46,7 +46,7 @@ async function getSingle(req, res, next) {
  */
 async function createCategory(req, res, next) {
   try {
-    const { name, type, color, icon } = req.body;
+    const { name, type, color, icon, budgetId } = req.body;
     if (!name || !type) {
       return res.status(400).json({ error: true, message: 'name and type are required' });
     }
@@ -54,7 +54,7 @@ async function createCategory(req, res, next) {
       userId: req.user._id,
       name,
       type,
-      color,
+      budgetId,
       icon,
     });
     await category.save();
