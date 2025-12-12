@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const dbHandler = require("../db/test-db-handler");
 const User = require("../models/user");
 const Category = require("../models/category");
+const Budget = require("../models/budget");
 
 // include the env values so we can decode tokens
 dotenv.config();
@@ -33,9 +34,20 @@ describe("Test Transactions Routes", function () {
     await mockUser.save();
     token = generateToken(mockUser);
 
-    //create a mock category for our budget to go into
+    //create a mock budget for our category to go into
+
+    mockBudget = new Budget({
+      userId: mockUser._id,
+      name: "Mock Budget 1",
+      startDate: "2025-01-01",
+      limit: 2000,
+    })
+    await mockBudget.save()
+
+    //create a mock category for our transaction to go into
     mockCategory = new Category({
       userId: mockUser._id,
+      budgetId: mockBudget._id,
       name: "mockCategory1",
       type: "expense",
       color: "red",

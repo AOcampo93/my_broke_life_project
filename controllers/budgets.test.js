@@ -33,15 +33,6 @@ describe("Test Budget Routes", function () {
     await mockUser.save();
     token = generateToken(mockUser);
 
-    //create a mock category for our budget to go into
-    mockCategory = new Category({
-      userId: mockUser._id,
-      name: "mockCategory1",
-      type: "expense",
-      color: "red",
-    });
-    await mockCategory.save();
-
     mockBudget = {};
   });
 
@@ -68,8 +59,8 @@ describe("Test Budget Routes", function () {
   test("responds to post /", async () => {
     data = {
       userId: mockUser._id,
-      categoryId: mockCategory._id,
-      month: "2025-01",
+      startDate: "2025-01-01",
+      name: "Test Budget 1",
       limit: 1,
       spent: 0,
     };
@@ -86,7 +77,7 @@ describe("Test Budget Routes", function () {
     expect(res.header["content-type"]).toBe("application/json; charset=utf-8");
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("userId");
-    expect(res.body).toHaveProperty("categoryId");
+    expect(res.body).toHaveProperty("total");
     expect(res.body).toHaveProperty("createdAt");
     mockBudget = res.body;
   });
@@ -103,7 +94,7 @@ describe("Test Budget Routes", function () {
     expect(res.header["content-type"]).toBe("application/json; charset=utf-8");
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("userId");
-    expect(res.body).toHaveProperty("categoryId");
+    expect(res.body).toHaveProperty("total");
     expect(res.body).toHaveProperty("createdAt");
   });
 
@@ -111,8 +102,8 @@ describe("Test Budget Routes", function () {
   test("responds to put /:id", async () => {
     data = {
       userId: mockUser._id,
-      categoryId: mockCategory._id,
-      month: "2025-02",
+      name: "Updated name",
+      startDate: "2025-02-02",
       limit: 2,
     };
 
@@ -128,16 +119,14 @@ describe("Test Budget Routes", function () {
     expect(res.header["content-type"]).toBe("application/json; charset=utf-8");
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("userId");
-    expect(res.body).toHaveProperty("categoryId");
+    expect(res.body).toHaveProperty("total");
     expect(res.body).toHaveProperty("createdAt");
     expect(res.body.limit).toBe(2);
-    expect(res.body.month).toBe("2025-02");
+    expect(res.body.startDate).toBe("2025-02-02T00:00:00.000Z");
     expect(JSON.stringify(res.body.userId)).toEqual(
       JSON.stringify(mockUser._id)
     );
-    expect(JSON.stringify(res.body.categoryId)).toEqual(
-      JSON.stringify(mockCategory._id)
-    );
+   
     mockBudget = res.body;
   });
 
