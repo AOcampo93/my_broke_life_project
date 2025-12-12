@@ -29,60 +29,31 @@
     { "BearerAuth": [] }
   ],
   "paths": {
-    "/auth/register": {
-      "post": {
-        "tags": ["Auth", "Untested"],
-        "summary": "Register a new user",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": { "$ref": "#/definitions/UserRegister" }
-          }
-        ],
+    "/auth/google": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Redirects to Google OAuth, which will then return an auth token",
+        "responses": {
+          "200": {"description": "OK"},
+          "500": {"description": "Something went wrong with the redirect."}
+        }
+      }
+    
+    },
+    "/auth/google/url": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Request a Google OAuth URL to send users to.",
         "responses": {
           "200": { "description": "OK" },
           "500": { "description": "Internal Server Error" }
         }
       }
     },
-    "/auth/login": {
-      "post": {
-        "tags": ["Auth", "Untested"],
-        "summary": "Login with email and password",
-        "parameters": [
-          { "name": "code", "in": "query", "required": true, "type": "string" }
-        ],
-        "responses": {
-          "200": { "description": "OK" },
-          "400": { "description": "Bad Request" },
-          "401": { "description": "Unauthorized" }
-        }
-      }
-    },
-    "/auth/google": {
-      "post": {
-        "tags": ["Auth", "Untested"],
-        "summary": "Authenticate via Google OAuth",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": { "$ref": "#/definitions/GoogleAuth" }
-          }
-        ],
-        "responses": {
-          "200": { "description": "OK" },
-          "400": { "description": "Bad Request" },
-          "401": { "description": "Unauthorized" }
-        }
-      }
-    },
+    
     "/auth/logout": {
       "post": {
-        "tags": ["Auth", "Untested"],
+        "tags": ["Auth"],
         "summary": "Logout a user",
         "responses": {
           "200": { "description": "OK" }
@@ -337,6 +308,7 @@
       "type": "object",
       "properties": {
         "_id": { "type": "string" },
+        "budgetId": { "type": "string" },
         "userId": { "type": "string" },
         "name": { "type": "string" },
         "type": { "type": "string", "enum": ["expense", "income"] },
@@ -348,8 +320,10 @@
     },
     "CategoryInput": {
       "type": "object",
-      "required": ["name", "type"],
+      "required": ["budgetId", "userId", "name", "type"],
       "properties": {
+        "budgetId": {"type": "string"},
+        "userId": {"type": "string"},
         "name": { "type": "string" },
         "type": { "type": "string", "enum": ["expense", "income"] },
         "color": { "type": "string" },
@@ -378,7 +352,7 @@
         "categoryId": { "type": "string" },
         "amount": { "type": "number" },
         "type": { "type": "string", "enum": ["expense", "income"] },
-        "date": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
         "note": { "type": "string" },
         "account": { "type": "string" }
       }
@@ -388,20 +362,23 @@
       "properties": {
         "_id": { "type": "string" },
         "userId": { "type": "string" },
-        "categoryId": { "type": "string" },
-        "month": { "type": "string" },
+        "name": {"type": "string"},
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
         "limit": { "type": "number" },
         "spent": { "type": "number" },
-        "createdAt": { "type": "string" },
-        "updatedAt": { "type": "string" }
+        "total": { "type": "number", "description": "Calculated total from the categories/transactions inside the budget." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       }
     },
     "BudgetInput": {
       "type": "object",
-      "required": ["categoryId", "month", "limit"],
+      "required": ["name", "startDate", "limit"],
       "properties": {
-        "categoryId": { "type": "string" },
-        "month": { "type": "string" },
+        "name": {"type": "string", "description": "The name of the budget"},
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
         "limit": { "type": "number" }
       }
     },
