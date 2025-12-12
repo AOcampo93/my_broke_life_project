@@ -22,8 +22,6 @@ router.use('/transactions', require('./transactions'));
 router.use('/budgets', require('./budgets'));
 router.use('/reports', require('./reports'));
 
-// Swagger documentation route (serves /api-docs)
-router.use('/', require('./swagger'));
 
 // Fallback 404 handler for unknown routes
 router.use((req, res) => {

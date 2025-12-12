@@ -44,6 +44,9 @@ app.use(
 // Preflight responses for all routes
 app.options('*', cors());
 
+// Swagger documentation route (serves /api-docs)
+app.use('/', require('./routes/swagger'));
+
 /*
  * API routes
  * All endpoints are prefixed with /api for clarity. See routes/index.js
