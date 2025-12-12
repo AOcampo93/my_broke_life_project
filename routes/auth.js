@@ -10,6 +10,10 @@ const authController = require('../controllers/auth');
 // endpoint to obtain the URL to redirect users for Google login.
 router.get('/google/url', authController.getGoogleAuthUrl);
 
+// Redirect directly to Google OAuth. Uses the same logic as /google/url, but actually redirects
+// rather than just returning the url. 
+router.get('/google', authController.redirectGoogleAuthUrl);
+
 // Google OAuth authentication. Accepts an idToken obtained by the client and
 // returns a JWT. This is optional if you use the full OAuth redirect flow.
 router.post('/google', authController.googleAuth);

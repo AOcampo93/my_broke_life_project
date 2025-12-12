@@ -98,22 +98,48 @@ async function googleAuth(req, res, next) {
 }
 
 /**
- * Generate a Google OAuth consent URL. Clients can use this endpoint to
+ *  Generate Google OAuth URL. 
+ * 
+ */
+
+function generateGoogleAuthUrl(){
+  const url = googleAuthClient.generateAuthUrl({
+      access_type: 'offline',
+      prompt: 'consent',
+      scope: ['openid', 'email', 'profile'],
+    });
+  return url
+}
+
+/**
+ * Return a Google OAuth consent URL. Clients can use this endpoint to
  * retrieve the URL to which a user should be redirected in order to
  * initiate the OAuth flow.
  */
 function getGoogleAuthUrl(req, res) {
   try {
-    const url = googleAuthClient.generateAuthUrl({
-      access_type: 'offline',
-      prompt: 'consent',
-      scope: ['openid', 'email', 'profile'],
-    });
+    url = generateGoogleAuthUrl()
     return res.status(200).json({ url });
   } catch (err) {
     console.error('auth.getGoogleAuthUrl error:', err);
     return res.status(500).json({ error: true, message: 'Failed to generate OAuth URL' });
   }
+}
+
+/**
+ * Redirect to Google Auth url. Useful if the client wants to streamline the redirect process. 
+ */
+
+function redirectGoogleAuthUrl(req, res){
+  try {
+    url = generateGoogleAuthUrl()
+    return res.redirect(url)
+  
+  } catch (err) {
+    console.error('auth.redirectGoogleAuthUrl error:', err)
+    return res.status(500).json({error: true, message: 'Failed to redirect to google Auth'})
+  }
+
 }
 
 /**
@@ -186,4 +212,5 @@ module.exports = {
   getGoogleAuthUrl,
   googleCallback,
   generateToken,
+  redirectGoogleAuthUrl,
 };
