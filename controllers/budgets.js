@@ -100,7 +100,7 @@ async function updateBudget(req, res, next) {
     if (!budget) {
       return res.status(404).json({ error: true, message: 'Budget not found' });
     }
-    const { categoryId, month, limit } = req.body;
+    const { categoryId, startDate, limit } = req.body;
     if (categoryId) {
       const category = await Category.findOne({
         _id: categoryId,
@@ -113,7 +113,7 @@ async function updateBudget(req, res, next) {
       }
       budget.categoryId = categoryId;
     }
-    if (month !== undefined) budget.month = month;
+    if (startDate !== undefined) budget.startDate = startDate;
     if (limit !== undefined) budget.limit = limit;
     await budget.save();
     return res.status(200).json(budget);
