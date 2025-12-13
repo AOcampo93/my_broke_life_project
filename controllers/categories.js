@@ -28,7 +28,11 @@ async function getAll(req, res, next) {
 async function getSingle(req, res, next) {
   try {
     const { id } = req.params;
-    const category = await Category.findOne({ _id: id, userId: req.user._id }).populate("transactions");
+    const { populate } = req.query
+    const category = await Category.findOne({ _id: id, userId: req.user._id })
+    if (populate === 'true'){
+      await category.populate("transactions");
+    }
     if (!category) {
       return res.status(404).json({ error: true, message: 'Category not found' });
     }

@@ -28,13 +28,19 @@ async function getAll(req, res, next) {
 async function getSingle(req, res, next) {
   try {
     const { id } = req.params;
+    const { populate } = req.query;
     const budget = await Budget.findOne({
       _id: id,
       userId: req.user._id,
-    }).populate({ path: "categories", populate: { path: "transactions" } });
+    })
+    if (populate === 'true'){
+      await budget.populate({ path: "categories", populate: { path: "transactions" } });
+
+    }
     if (!budget) {
       return res.status(404).json({ error: true, message: "Budget not found" });
     }
+    
     return res.status(200).json(budget);
   } catch (err) {
     console.error('budgets.getSingle error:', err);

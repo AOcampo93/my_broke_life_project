@@ -25,20 +25,17 @@
       "description": "Use 'Bearer <token>' for JWT authentication"
     }
   },
-  "security": [
-    { "BearerAuth": [] }
-  ],
+  "security": [{ "BearerAuth": [] }],
   "paths": {
     "/auth/google": {
       "get": {
         "tags": ["Auth"],
         "summary": "Redirects to Google OAuth, which will then return an auth token",
         "responses": {
-          "200": {"description": "OK"},
-          "500": {"description": "Something went wrong with the redirect."}
+          "200": { "description": "OK" },
+          "500": { "description": "Something went wrong with the redirect." }
         }
       }
-    
     },
     "/auth/google/url": {
       "get": {
@@ -50,7 +47,7 @@
         }
       }
     },
-    
+
     "/auth/logout": {
       "post": {
         "tags": ["Auth"],
@@ -96,10 +93,26 @@
         "tags": ["Categories", "Untested"],
         "summary": "Get a single category by ID",
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string" }
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Category Id to get details about."
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "required": false,
+            "type": "bool",
+            "description": "Display the children transactions and total or not. (true/false)"
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "schema": { "$ref": "#/definitions/Category" } },
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/Category" }
+          },
           "404": { "description": "Not Found" }
         }
       },
@@ -108,7 +121,12 @@
         "summary": "Update a category",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/CategoryInput" } }
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/CategoryInput" }
+          }
         ],
         "responses": {
           "200": { "description": "OK" },
@@ -135,7 +153,12 @@
         "parameters": [
           { "name": "from", "in": "query", "type": "string", "format": "date" },
           { "name": "to", "in": "query", "type": "string", "format": "date" },
-          { "name": "type", "in": "query", "type": "string", "enum": ["expense", "income"] },
+          {
+            "name": "type",
+            "in": "query",
+            "type": "string",
+            "enum": ["expense", "income"]
+          },
           { "name": "category", "in": "query", "type": "string" }
         ],
         "responses": {
@@ -152,7 +175,12 @@
         "tags": ["Transactions"],
         "summary": "Create a new transaction",
         "parameters": [
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/TransactionInput" } }
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/TransactionInput" }
+          }
         ],
         "responses": {
           "201": { "description": "Created" },
@@ -168,7 +196,10 @@
           { "name": "id", "in": "path", "required": true, "type": "string" }
         ],
         "responses": {
-          "200": { "description": "OK", "schema": { "$ref": "#/definitions/Transaction" } },
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/Transaction" }
+          },
           "404": { "description": "Not Found" }
         }
       },
@@ -177,7 +208,12 @@
         "summary": "Update a transaction",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/TransactionInput" } }
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/TransactionInput" }
+          }
         ],
         "responses": {
           "200": { "description": "OK" },
@@ -215,7 +251,12 @@
         "tags": ["Budgets"],
         "summary": "Create or update a budget",
         "parameters": [
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/BudgetInput" } }
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/BudgetInput" }
+          }
         ],
         "responses": {
           "201": { "description": "Created" },
@@ -228,10 +269,20 @@
         "tags": ["Budgets"],
         "summary": "Get a budget by ID",
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "type": "string" }
+          { "name": "id", "in": "path", "required": true, "type": "string" },
+          {
+            "name": "populate",
+            "in": "query",
+            "required": false,
+            "type": "bool",
+            "description": "Display the children categories or not. (true/false)"
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "schema": { "$ref": "#/definitions/Budget" } },
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/Budget" }
+          },
           "404": { "description": "Not Found" }
         }
       },
@@ -240,7 +291,12 @@
         "summary": "Update a budget",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "string" },
-          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/BudgetInput" } }
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/BudgetInput" }
+          }
         ],
         "responses": {
           "200": { "description": "OK" },
@@ -265,7 +321,12 @@
         "tags": ["Reports", "Untested"],
         "summary": "Get a monthly summary of income and expenses",
         "parameters": [
-          { "name": "month", "in": "query", "type": "string", "description": "Month in YYYY-MM format" }
+          {
+            "name": "month",
+            "in": "query",
+            "type": "string",
+            "description": "Month in YYYY-MM format"
+          }
         ],
         "responses": {
           "200": {
@@ -322,8 +383,8 @@
       "type": "object",
       "required": ["budgetId", "userId", "name", "type"],
       "properties": {
-        "budgetId": {"type": "string"},
-        "userId": {"type": "string"},
+        "budgetId": { "type": "string" },
+        "userId": { "type": "string" },
         "name": { "type": "string" },
         "type": { "type": "string", "enum": ["expense", "income"] },
         "color": { "type": "string" },
@@ -362,12 +423,15 @@
       "properties": {
         "_id": { "type": "string" },
         "userId": { "type": "string" },
-        "name": {"type": "string"},
+        "name": { "type": "string" },
         "startDate": { "type": "string", "format": "date" },
         "endDate": { "type": "string", "format": "date" },
         "limit": { "type": "number" },
         "spent": { "type": "number" },
-        "total": { "type": "number", "description": "Calculated total from the categories/transactions inside the budget." },
+        "total": {
+          "type": "number",
+          "description": "Calculated total from the categories/transactions inside the budget."
+        },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
       }
@@ -376,7 +440,7 @@
       "type": "object",
       "required": ["name", "startDate", "limit"],
       "properties": {
-        "name": {"type": "string", "description": "The name of the budget"},
+        "name": { "type": "string", "description": "The name of the budget" },
         "startDate": { "type": "string", "format": "date" },
         "endDate": { "type": "string", "format": "date" },
         "limit": { "type": "number" }
