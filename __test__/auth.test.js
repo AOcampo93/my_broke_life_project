@@ -14,4 +14,16 @@ describe('Test Auth Routes', function () {
     expect(res.body.message).toEqual('Logged out successfully');
   });
 
+  test('responds to /google/url', async function(){
+    const res = await request(app).get('/google/url');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("url")
+    expect(res.body.url).not.toBe(null)
+  })
+
+  test('responds to /google/', async function(){
+    const res = await request(app).get('/google')
+    expect(res.statusCode).toBe(302)
+  })
+
 });
