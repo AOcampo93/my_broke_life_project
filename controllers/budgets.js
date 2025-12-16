@@ -58,10 +58,10 @@ async function getSingle(req, res, next) {
 async function createBudget(req, res, next) {
   try {
     const { startDate, limit, endDate, name } = req.body;
-    if (!startDate || limit === undefined) {
+    if (!startDate || name === undefined || limit === undefined) {
       return res
         .status(400)
-        .json({ error: true, message: "startDate and limit are required" });
+        .json({ error: true, message: "startDate and name are required" });
     }
 
     // Upsert budget (create new or update existing)
@@ -106,7 +106,7 @@ async function updateBudget(req, res, next) {
     if (!budget) {
       return res.status(404).json({ error: true, message: 'Budget not found' });
     }
-    const { categoryId, startDate, limit } = req.body;
+    const { categoryId, startDate, limit, endDate, name } = req.body;
     if (categoryId) {
       const category = await Category.findOne({
         _id: categoryId,
@@ -120,7 +120,12 @@ async function updateBudget(req, res, next) {
       budget.categoryId = categoryId;
     }
     if (startDate !== undefined) budget.startDate = startDate;
+    if (name !== undefined) budget.name = name;
+    if (endDate !== undefined) budget.endDate = endDate;
     if (limit !== undefined) budget.limit = limit;
+    if (startDate === undefined && name === undefined && limit === undefined && endDate === undefined){
+            return res.status(400).json({ error: true, message: "No valid data sent. No changes made." });
+    }
     await budget.save();
     return res.status(200).json(budget);
   } catch (err) {
