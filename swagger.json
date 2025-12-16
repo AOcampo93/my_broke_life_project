@@ -9,9 +9,9 @@
   "basePath": "/api",
   "tags": [
     { "name": "Auth", "description": "Authentication routes" },
+    { "name": "Budgets", "description": "Manage budgets" },
     { "name": "Categories", "description": "Manage categories" },
     { "name": "Transactions", "description": "Manage transactions" },
-    { "name": "Budgets", "description": "Manage budgets" },
     { "name": "Reports", "description": "View reports" }
   ],
   "schemes": ["http"],
