@@ -5,6 +5,7 @@ const { generateToken } = require("../controllers/auth");
 const dotenv = require("dotenv");
 const dbHandler = require("../db/test-db-handler");
 const User = require("../models/user");
+const Budget = require("../models/budget")
 
 // include the env values so we can decode tokens
 dotenv.config();
@@ -32,6 +33,16 @@ describe("Test Categories Routes", function () {
     await mockUser.save();
     token = generateToken(mockUser);
 
+    mockBudget = new Budget({
+      userId: mockUser._id,
+      name: "MockBudget",
+      startDate: "2025-01-01",
+      spent: 0,
+      limit: 2000,
+    });
+
+    mockBudget.save();
+
     mockCategory = {};
   });
 
@@ -58,6 +69,7 @@ describe("Test Categories Routes", function () {
   test("responds to post /", async () => {
     data = {
       name: "Test Category",
+      budgetId: mockBudget._id,
       type: "expense",
       color: "blue",
       icon: "shopping-cart",
