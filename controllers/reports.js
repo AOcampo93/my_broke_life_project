@@ -36,7 +36,7 @@ async function getMonthlySummary(req, res, next) {
     const summary = await Transaction.aggregate([
       {
         $match: {
-          userId: mongoose.Types.ObjectId(req.user._id),
+          userId: req.user._id,
           date: { $gte: startDate, $lt: endDate },
         },
       },
